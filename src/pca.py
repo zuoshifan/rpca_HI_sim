@@ -119,10 +119,10 @@ for i in xrange(1, 7):
     # plot res
     plt.figure()
     fig = plt.figure(1)
-    # healpy.mollview(res[cind], fig=1, title='')
+    healpy.mollview(res[cind], fig=1, title='')
     # healpy.mollview(res[cind], fig=1, title='', min=-0.001, max=0.001)
     # healpy.mollview(res[cind], fig=1, title='', min=-0.0005, max=0.0005)
-    healpy.mollview(res[cind], fig=1, title='', min=-0.0004, max=0.0004)
+    # healpy.mollview(res[cind], fig=1, title='', min=-0.0004, max=0.0004)
     healpy.graticule(verbose=False)
     fig.savefig(out_dir + 'res_%d.png' % i)
     plt.close()
@@ -131,10 +131,10 @@ for i in xrange(1, 7):
 
     # plot difference map
     fig = plt.figure(1)
-    # healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='')
+    healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='')
     # healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', min=-0.001, max=0.001)
     # healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', min=-0.0005, max=0.0005)
-    healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', min=-0.0003, max=0.0003)
+    # healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', min=-0.0003, max=0.0003)
     healpy.graticule(verbose=False)
     fig.savefig(out_dir + 'diff_%d.png' % i)
     plt.close()
@@ -142,9 +142,11 @@ for i in xrange(1, 7):
     # plot scatter
     plt.figure()
     plt.scatter(cm_map[cind], rec_cm[cind])
-    plt.xlim(-0.002, 0.002)
-    plt.ylim(-0.002, 0.002)
-    ref_line = np.linspace(-0.002, 0.002, 100)
+    # val = 0.002
+    val = 0.001
+    plt.xlim(-val, val)
+    plt.ylim(-val, val)
+    ref_line = np.linspace(-val, val, 100)
     plt.plot(ref_line, ref_line, 'k--')
     plt.savefig(out_dir + 'scatter_%d.png' % i)
     plt.close()
