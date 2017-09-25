@@ -108,6 +108,7 @@ plt.savefig(out_dir+'Pkp_conv.png')
 plt.close()
 
 
+# ###########################################################################
 # gilc reconstruct
 s, U = la.eigh(R_HI)
 R_HIh = np.dot(U*s**0.5, U.T)
@@ -125,7 +126,6 @@ W = np.dot(np.dot(np.dot(S, la.inv(STRiS)), S.T), Ri)
 rec_cm = np.dot(W, tt_map)
 
 Pkp_gilc = np.zeros(N)
-# Np = 1000
 for pi in range(Np):
     gkp = (cd_span / N) * ndft(cd, rec_cm[:, pi], kp) # K (h Mpc^-1)^-1
     Pkp_gilc += np.abs(gkp)**2 / (2.0*np.pi) # K^2 (Mpc / h)
@@ -169,5 +169,96 @@ ax.xaxis.set_major_formatter(ScalarFormatter())
 ax.yaxis.set_major_formatter(ScalarFormatter())
 plt.xlabel(r'$k_\parallel$ [$h$ Mpc${}^{-1}$]')
 plt.ylabel(r'$P_{21}^{\mathrm{recovered}}(k_\parallel) / P_{21}^{\mathrm{input}}(k_\parallel)$')
-plt.savefig(out_dir+'Tkp.png')
+plt.savefig(out_dir+'Tkp_gilc.png')
+plt.close()
+
+
+# ###########################################################################
+# PCA for R_tt
+s, U = la.eigh(R_tt)
+
+Nm = 4 # number of modes to subtract
+pc_sum = np.dot(np.dot(U[:, -Nm:], U[:, -Nm:].T), tt_map)
+res = tt_map - pc_sum
+rec_cm = res
+
+Pkp_pca = np.zeros(N)
+for pi in range(Np):
+    gkp = (cd_span / N) * ndft(cd, rec_cm[:, pi], kp) # K (h Mpc^-1)^-1
+    Pkp_pca += np.abs(gkp)**2 / (2.0*np.pi) # K^2 (Mpc / h)
+Pkp_pca /= Np # K^2 (Mpc / h)
+Pkp_pca *= 1.0e6 # mK^2 (Mpc / h)
+
+# plot Pkp_pca
+fig, ax = plt.subplots()
+plt.loglog(kp, Pkp_pca)
+plt.xlim(0.01, 0.5)
+ax.set_xticks([0.01, 0.05, 0.1, 0.5])
+ax.xaxis.set_major_formatter(ScalarFormatter())
+ax.yaxis.set_major_formatter(ScalarFormatter())
+plt.xlabel(r'$k_\parallel$ [$h$ Mpc${}^{-1}$]')
+plt.ylabel(r'$P_{21}(k_\parallel)$ [mK${}^2 h^{-1}$ Mpc]')
+plt.savefig(out_dir+'Pkp_conv_pca.png')
+plt.close()
+
+# plot Pkp and Pkp_pca
+fig, ax = plt.subplots()
+plt.loglog(kp, Pkp, label='input')
+plt.loglog(kp, Pkp_pca, label='recovered')
+plt.xlim(0.01, 0.5)
+ax.set_xticks([0.01, 0.05, 0.1, 0.5])
+ax.xaxis.set_major_formatter(ScalarFormatter())
+ax.yaxis.set_major_formatter(ScalarFormatter())
+plt.legend()
+plt.xlabel(r'$k_\parallel$ [$h$ Mpc${}^{-1}$]')
+plt.ylabel(r'$P_{21}(k_\parallel)$ [mK${}^2 h^{-1}$ Mpc]')
+plt.savefig(out_dir+'Pkp_conv_pca2.png')
+plt.close()
+
+# plot transfer function
+fig, ax = plt.subplots()
+plt.semilogx(kp, Pkp_pca/Pkp)
+plt.axhline(y=1.0, linewidth=1.0, color='k', linestyle='--')
+plt.xlim(0.01, 0.5)
+plt.ylim(0.5, 1.1)
+ax.set_xticks([0.01, 0.05, 0.1, 0.5])
+ax.xaxis.set_major_formatter(ScalarFormatter())
+ax.yaxis.set_major_formatter(ScalarFormatter())
+plt.xlabel(r'$k_\parallel$ [$h$ Mpc${}^{-1}$]')
+plt.ylabel(r'$P_{21}^{\mathrm{recovered}}(k_\parallel) / P_{21}^{\mathrm{input}}(k_\parallel)$')
+plt.savefig(out_dir+'Tkp_pca.png')
+plt.close()
+
+
+# ############################################################################
+# combined plot of gilc and pca
+# plot Pkp and Pkp_pca
+fig, ax = plt.subplots()
+plt.loglog(kp, Pkp, label='input')
+plt.loglog(kp, Pkp_gilc, label='recovered by RPCA+GILC')
+plt.loglog(kp, Pkp_pca, label='recovered by classical PCA')
+plt.xlim(0.01, 0.5)
+ax.set_xticks([0.01, 0.05, 0.1, 0.5])
+ax.xaxis.set_major_formatter(ScalarFormatter())
+ax.yaxis.set_major_formatter(ScalarFormatter())
+plt.legend()
+plt.xlabel(r'$k_\parallel$ [$h$ Mpc${}^{-1}$]')
+plt.ylabel(r'$P_{21}(k_\parallel)$ [mK${}^2 h^{-1}$ Mpc]')
+plt.savefig(out_dir+'Pkp_conv_combined.png')
+plt.close()
+
+# plot transfer function
+fig, ax = plt.subplots()
+plt.semilogx(kp, Pkp_gilc/Pkp, label='RPCA+GILC')
+plt.semilogx(kp, Pkp_pca/Pkp, label='classical PCA')
+plt.axhline(y=1.0, linewidth=1.0, color='k', linestyle='--')
+plt.xlim(0.01, 0.5)
+plt.ylim(0.5, 1.1)
+ax.set_xticks([0.01, 0.05, 0.1, 0.5])
+ax.xaxis.set_major_formatter(ScalarFormatter())
+ax.yaxis.set_major_formatter(ScalarFormatter())
+plt.legend()
+plt.xlabel(r'$k_\parallel$ [$h$ Mpc${}^{-1}$]')
+plt.ylabel(r'$P_{21}^{\mathrm{recovered}}(k_\parallel) / P_{21}^{\mathrm{input}}(k_\parallel)$')
+plt.savefig(out_dir+'Tkp_combined.png')
 plt.close()
