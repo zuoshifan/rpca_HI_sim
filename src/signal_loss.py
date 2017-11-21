@@ -2,22 +2,24 @@ import os
 import numpy as np
 from scipy import linalg as la
 import h5py
+import config
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-conv_beam = True
+conv_beam = config.conv_beam
+D = config.D
 
 if conv_beam:
-    out_dir = '../signal_loss/conv/'
+    out_dir = '../results/signal_loss/conv_%.1f/' % D
 else:
-    out_dir = '../signal_loss/no_conv/'
+    out_dir = '../results/signal_loss/no_conv/'
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
 
 if conv_beam:
-    map_dir = '../conv/'
+    map_dir = '../results/conv_beam/conv_%.1f/' % D
     ps_name = map_dir + 'smooth_pointsource_256_700_800_256.hdf5'
     ga_name = map_dir + 'smooth_galaxy_256_700_800_256.hdf5'
     cm_name = map_dir + 'smooth_21cm_256_700_800_256.hdf5'
@@ -27,11 +29,11 @@ if conv_beam:
         ga_map = f['map'][:]
     with h5py.File(cm_name, 'r') as f:
         cm_map = f['map'][:]
-    with h5py.File('../decomp/conv/decomp.hdf5', 'r') as f:
+    with h5py.File('../results/decomp/conv_%.1f/decomp.hdf5' % D, 'r') as f:
         # R_tt = f['tt_tt'][:]
         R_HI_rpca = f['S'][:]
         # L = f['L'][:]
-    with h5py.File('../corr_data/conv/corr.hdf5', 'r') as f:
+    with h5py.File('../results/corr_data/conv_%.1f/corr.hdf5' % D, 'r') as f:
         R_tt = f['tt_tt'][:]
         R_HI = f['cm_cm'][:]
         # R_f = f['fg_fg'][:]
@@ -46,11 +48,11 @@ else:
         ga_map = f['map'][:, 0, :]
     with h5py.File(cm_name, 'r') as f:
         cm_map = f['map'][:, 0, :]
-    with h5py.File('../decomp/no_conv/decomp.hdf5', 'r') as f:
+    with h5py.File('../results/decomp/no_conv/decomp.hdf5', 'r') as f:
         # R_tt = f['tt_tt'][:]
         R_HI_rpca = f['S'][:]
         # L = f['L'][:]
-    with h5py.File('../corr_data/no_conv/corr.hdf5', 'r') as f:
+    with h5py.File('../results/corr_data/no_conv/corr.hdf5', 'r') as f:
         R_tt = f['tt_tt'][:]
         R_HI = f['cm_cm'][:]
         # R_f = f['fg_fg'][:]

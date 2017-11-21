@@ -1,24 +1,26 @@
 import os
 import numpy as np
 import h5py
+import config
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-conv_beam = True
+conv_beam = config.conv_beam
+D = config.D
 
 if conv_beam:
-    out_dir = '../plot/decomp/conv/'
+    out_dir = '../results/plot/decomp/conv_%.1f/' % D
 else:
-    out_dir = '../plot/decomp/no_conv/'
+    out_dir = '../results/plot/decomp/no_conv/'
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
 
 if conv_beam:
-    in_dir = '../decomp/conv/'
+    in_dir = '../results/decomp/conv_%.1f/' % D
 else:
-    in_dir = '../decomp/no_conv/'
+    in_dir = '../results/decomp/no_conv/'
 with h5py.File(in_dir + 'decomp.hdf5', 'r') as f:
     tt_tt = f['tt_tt'][:]
     cm_cm = f['cm_cm'][:]

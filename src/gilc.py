@@ -4,22 +4,24 @@ from numpy.linalg import matrix_rank
 from scipy import linalg as la
 import h5py
 import healpy
+import config
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-conv_beam = True
+conv_beam = config.conv_beam
+D = config.D
 
 if conv_beam:
-    out_dir = '../gilc_reconstruct/conv/'
+    out_dir = '../results/gilc_reconstruct/conv_%.1f/' % D
 else:
-    out_dir = '../gilc_reconstruct/no_conv/'
+    out_dir = '../results/gilc_reconstruct/no_conv/'
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
 
 if conv_beam:
-    map_dir = '../conv/'
+    map_dir = '../results/conv_beam/conv_%.1f/' % D
     ps_name = map_dir + 'smooth_pointsource_256_700_800_256.hdf5'
     ga_name = map_dir + 'smooth_galaxy_256_700_800_256.hdf5'
     cm_name = map_dir + 'smooth_21cm_256_700_800_256.hdf5'
@@ -29,7 +31,7 @@ if conv_beam:
         ga_map = f['map'][:]
     with h5py.File(cm_name, 'r') as f:
         cm_map = f['map'][:]
-    with h5py.File('../decomp/conv/decomp.hdf5', 'r') as f:
+    with h5py.File('../results/decomp/conv_%.1f/decomp.hdf5' % D, 'r') as f:
         R_tt = f['tt_tt'][:]
         R_HI = f['S'][:]
         L = f['L'][:]
@@ -44,7 +46,7 @@ else:
         ga_map = f['map'][:, 0, :]
     with h5py.File(cm_name, 'r') as f:
         cm_map = f['map'][:, 0, :]
-    with h5py.File('../decomp/no_conv/decomp.hdf5', 'r') as f:
+    with h5py.File('../results/decomp/no_conv/decomp.hdf5', 'r') as f:
         R_tt = f['tt_tt'][:]
         R_HI = f['S'][:]
         L = f['L'][:]
@@ -75,10 +77,14 @@ plt.close()
 cind = len(cm_map) / 2 # central frequency index
 
 if conv_beam:
-    # for D = 35.2
-    # threshold = [ 200.0, 2.0, 1.8, 1.7, 1.6, 1.5, 1.4, 1.3, 1.2, 1.1 ]
-    # for D = 100.0
-    threshold = [ 200.0, 2.0, 1.2, 1.15, 1.1 ]
+    if D == 35.0:
+        threshold = [ 200.0, 2.0, 1.8, 1.7, 1.6, 1.5, 1.4, 1.3, 1.2, 1.1 ]
+    elif D == 100.0:
+        threshold = [ 200.0, 2.0, 1.2, 1.15, 1.1 ]
+    elif D == 300.0:
+        threshold = [ 2.0, 1.2, 1.1, 1.05 ]
+    else:
+        raise ValueError('Unsupported diameter D = %f' % D)
 else:
     # threshold = [ 1.0, 1.05, 1.1, 1.15, 1.2, 5.0e3 ]
     threshold = [ 1.0, 1.1, 1.2, 5.0e3 ]

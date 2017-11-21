@@ -5,24 +5,26 @@ from scipy import linalg as la
 import h5py
 from rpca import RPCA
 import healpy
+import config
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-conv_beam = True
+conv_beam = config.conv_beam
+D = config.D
 
 if conv_beam:
-    out_dir = '../decomp/conv/'
+    out_dir = '../results/decomp/conv_%.1f/' % D
 else:
-    out_dir = '../decomp/no_conv/'
+    out_dir = '../results/decomp/no_conv/'
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
 
 if conv_beam:
-    in_dir = '../corr_data/conv/'
+    in_dir = '../results/corr_data/conv_%.1f/' % D
 else:
-    out_dir = '../corr_data/no_conv/'
+    out_dir = '../results/corr_data/no_conv/'
 with h5py.File(in_dir+'corr.hdf5', 'r') as f:
     cm_cm_corr = f['cm_cm'][:]
     tt_tt_corr = f['tt_tt'][:]

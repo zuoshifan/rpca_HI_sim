@@ -3,24 +3,25 @@ import numpy as np
 from scipy import linalg as la
 import h5py
 from astropy.cosmology import Planck13 as cosmo
+import config
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter
 
 
-conv_beam = True
-# conv_beam = False
+conv_beam = config.conv_beam
+D = config.D
 
 if conv_beam:
-    out_dir = '../pk/conv/'
+    out_dir = '../results/pk/conv_%.1f/' % D
 else:
-    out_dir = '../pk/no_conv/'
+    out_dir = '../results/pk/no_conv/'
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
 
 if conv_beam:
-    map_dir = '../conv/'
+    map_dir = '../results/conv_beam/conv_%.1f/' % D
     ps_name = map_dir + 'smooth_pointsource_256_700_800_256.hdf5'
     ga_name = map_dir + 'smooth_galaxy_256_700_800_256.hdf5'
     cm_name = map_dir + 'smooth_21cm_256_700_800_256.hdf5'
@@ -30,7 +31,7 @@ if conv_beam:
         ga_map = f['map'][:]
     with h5py.File(cm_name, 'r') as f:
         cm_map = f['map'][:]
-    with h5py.File('../decomp/conv/decomp.hdf5', 'r') as f:
+    with h5py.File('../results/decomp/conv_%.1f/decomp.hdf5' % D, 'r') as f:
         R_tt = f['tt_tt'][:]
         R_HI = f['S'][:]
         L = f['L'][:]
@@ -45,7 +46,7 @@ else:
         ga_map = f['map'][:, 0, :]
     with h5py.File(cm_name, 'r') as f:
         cm_map = f['map'][:, 0, :]
-    with h5py.File('../decomp/no_conv/decomp.hdf5', 'r') as f:
+    with h5py.File('../results/decomp/no_conv/decomp.hdf5', 'r') as f:
         R_tt = f['tt_tt'][:]
         R_HI = f['S'][:]
         L = f['L'][:]
@@ -91,6 +92,7 @@ Pkp = np.zeros(N)
 # Np = 1000 # for fast test
 for pi in range(Np):
     gkp = (cd_span / N) * ndft(cd, cm_map[:, pi], kp) # K (h Mpc^-1)^-1
+    # according to the definition <\delta(k) \delta(k')^*> = (2\pi)^3 \delta(k - k') P(k), but for 1D, <\delta(k) \delta(k')^*> = (2\pi) \delta(k - k') P(k)
     Pkp += np.abs(gkp)**2 / (2.0*np.pi) # K^2 (Mpc / h)
 Pkp /= Np # K^2 (Mpc / h)
 Pkp *= 1.0e6 # mK^2 (Mpc / h)
@@ -117,7 +119,17 @@ s1, U1 = la.eigh(np.dot(np.dot(R_HInh, R_tt), R_HInh))
 # print (s1[::-1])[:50]
 
 # reconstruct 21cm map
-td = 2.0 # the threshold
+if conv_beam:
+    if D == 35.0:
+        td = 1.7
+    elif D == 100.0:
+        td = 2.0 # the threshold
+    elif D == 300.0:
+        td = 1.2
+    else:
+        raise ValueError('Unsupported diameter D = %f' % D)
+else:
+    td = 1.2
 n = np.where(s1>td)[0][0]
 S = np.dot(R_HIh, U1[:, :n])
 Ri = la.inv(R_tt)

@@ -1,19 +1,21 @@
 import os
 import numpy as np
 import h5py
+import config
 
 
-conv_beam = True
+conv_beam = config.conv_beam
+D = config.D
 
 if conv_beam:
-    out_dir = '../corr_data/conv/'
+    out_dir = '../results/corr_data/conv_%.1f/' % D
 else:
-    out_dir = '../corr_data/no_conv/'
+    out_dir = '../results/corr_data/no_conv/'
 if not os.path.exists(out_dir):
     os.makedirs(out_dir)
 
 if conv_beam:
-    map_dir = '../conv/'
+    map_dir = '../results/conv_beam/conv_%.1f/' % D
     ps_name = map_dir + 'smooth_pointsource_256_700_800_256.hdf5'
     ga_name = map_dir + 'smooth_galaxy_256_700_800_256.hdf5'
     cm_name = map_dir + 'smooth_21cm_256_700_800_256.hdf5'
