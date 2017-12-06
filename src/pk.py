@@ -82,11 +82,6 @@ print N
 N = 200
 kp = np.logspace(-2.0, -0.3, N) # h Mpc^-1
 
-# # Fourier transform \hat{delta}_HI(kp)
-# gkp = (cd_span / N) * ndft(cd, cm_map[:, 0], kp) # K (h Mpc^-1)^-1
-# Pkp = np.abs(gkp)**2 / (2.0*np.pi) # K^2 (Mpc / h)
-# Pkp *= 1.0e6 # mK^2 (Mpc / h)
-
 Nf, Np = cm_map.shape
 Pkp = np.zeros(N)
 # Np = 1000 # for fast test
