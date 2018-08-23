@@ -5,3 +5,6 @@ conv_beam = True
 # D = 35.0
 D = 100.0
 # D = 300.0
+
+# nside of the maps
+nside = 512

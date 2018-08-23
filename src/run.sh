@@ -12,16 +12,16 @@ python decomp.py
 # plot decomposition
 python plot_decomp.py
 
-# do gilc reconstruction
-python gilc.py
+# # do gilc reconstruction
+# python gilc.py
 
-# do pca reconstruction
-python pca.py
+# # do pca reconstruction
+# python pca.py
 
-# quantify signal loss
-python signal_loss.py
+# # quantify signal loss
+# python signal_loss.py
 
-# compute P(k_\parallel)
-python pk.py
+# # compute P(k_\parallel)
+# python pk.py
 
 echo done

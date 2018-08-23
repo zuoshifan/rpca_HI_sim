@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 
 conv_beam = config.conv_beam
 D = config.D
+nside = config.nside
 
 if conv_beam:
     out_dir = '../results/pca_reconstruct/conv_%.1f/' % D
@@ -23,9 +24,9 @@ if not os.path.exists(out_dir):
 
 if conv_beam:
     map_dir = '../results/conv_beam/conv_%.1f/' % D
-    ps_name = map_dir + 'smooth_pointsource_256_700_800_256.hdf5'
-    ga_name = map_dir + 'smooth_galaxy_256_700_800_256.hdf5'
-    cm_name = map_dir + 'smooth_21cm_256_700_800_256.hdf5'
+    ps_name = map_dir + 'smooth_pointsource_%d_700_800_256.hdf5' % nside
+    ga_name = map_dir + 'smooth_galaxy_%d_700_800_256.hdf5' % nside
+    cm_name = map_dir + 'smooth_21cm_%d_700_800_256.hdf5' % nside
     with h5py.File(ps_name, 'r') as f:
         ps_map = f['map'][:]
     with h5py.File(ga_name, 'r') as f:
@@ -40,9 +41,9 @@ if conv_beam:
         R_f = f['fg_fg'][:]
 else:
     map_dir = '../sky_map/'
-    ps_name = map_dir + 'sim_pointsource_256_700_800_256.hdf5'
-    ga_name = map_dir + 'sim_galaxy_256_700_800_256.hdf5'
-    cm_name = map_dir + 'sim_21cm_256_700_800_256.hdf5'
+    ps_name = map_dir + 'sim_pointsource_%d_700_800_256.hdf5' % nside
+    ga_name = map_dir + 'sim_galaxy_%d_700_800_256.hdf5' % nside
+    cm_name = map_dir + 'sim_21cm_%d_700_800_256.hdf5' % nside
     with h5py.File(ps_name, 'r') as f:
         ps_map = f['map'][:, 0, :]
     with h5py.File(ga_name, 'r') as f:
