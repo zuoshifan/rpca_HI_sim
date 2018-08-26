@@ -5,6 +5,12 @@ import h5py
 import config
 import matplotlib
 matplotlib.use('Agg')
+try:
+    # for new version matplotlib
+    import matplotlib.style as mstyle
+    mstyle.use('classic')
+except ImportError:
+    pass
 import matplotlib.pyplot as plt
 
 

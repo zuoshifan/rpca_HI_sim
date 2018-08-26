@@ -3,9 +3,6 @@ import numpy as np
 import h5py
 import healpy as hp
 import config
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 
 
 if not config.conv_beam:

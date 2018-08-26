@@ -4,11 +4,7 @@ from numpy.linalg import matrix_rank
 from scipy import linalg as la
 import h5py
 from rpca import RPCA
-import healpy
 import config
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 
 
 conv_beam = config.conv_beam

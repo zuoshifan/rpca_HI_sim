@@ -7,6 +7,12 @@ import config
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+try:
+    # for new version matplotlib
+    import matplotlib.style as mstyle
+    mstyle.use('classic')
+except ImportError:
+    pass
 from matplotlib.ticker import ScalarFormatter
 
 
