@@ -77,7 +77,8 @@ plt.semilogy(xinds, s[::-1])
 plt.semilogy(xinds, s[::-1], 'ro', markersize=4.0)
 # plt.axhline(y=1.0, linewidth=1.0, color='k', linestyle='--')
 plt.xlim(-1, 256)
-plt.ylabel('Eigen-values')
+plt.xlabel('eigen modes', fontsize=14)
+plt.ylabel('eigenvalues', fontsize=14)
 plt.savefig(out_dir + 'eig_val.png')
 plt.close()
 
@@ -90,7 +91,8 @@ plt.plot(xinds, U[:, -4])
 plt.plot(xinds, U[:, -5])
 plt.plot(xinds, U[:, -6])
 plt.xlim(-1, 256)
-plt.ylabel('Eigen-vector')
+plt.xlabel('eigen modes', fontsize=14)
+plt.ylabel('eigenvector', fontsize=14)
 plt.savefig(out_dir + 'eig_vector.png')
 plt.close()
 
@@ -101,6 +103,11 @@ for i in xrange(1, 7):
     pc = np.dot(np.dot(U[:, -i], U[:, -i].T), tt_map)
     pc_sum = np.dot(np.dot(U[:, -i:], U[:, -i:].T), tt_map)
     res = tt_map - pc_sum
+
+    # save reconstructed 21cm data for latter use
+    with h5py.File(out_dir + 'rec_cm_%d.hdf5' % i, 'w') as f:
+        f.create_dataset('cm_map', data=cm_map)
+        f.create_dataset('rec_cm', data=res)
 
     # # plot pc
     # plt.figure()
@@ -113,7 +120,7 @@ for i in xrange(1, 7):
     # plot pc_sum
     plt.figure()
     fig = plt.figure(1)
-    healpy.mollview(pc_sum[cind], fig=1, title='', min=0, max=50)
+    healpy.mollview(pc_sum[cind], fig=1, title='', min=0, max=50, unit='brightness temperature [K]')
     healpy.graticule(verbose=False)
     fig.savefig(out_dir + 'pc_sum_%d.png' % i)
     plt.close()
@@ -128,7 +135,7 @@ for i in xrange(1, 7):
     # plot res
     plt.figure()
     fig = plt.figure(1)
-    healpy.mollview(res[cind], fig=1, title='')
+    healpy.mollview(res[cind], fig=1, title='', unit='brightness temperature [K]')
     # healpy.mollview(res[cind], fig=1, title='', min=-0.001, max=0.001)
     # healpy.mollview(res[cind], fig=1, title='', min=-0.0005, max=0.0005)
     # healpy.mollview(res[cind], fig=1, title='', min=-0.0004, max=0.0004)
@@ -140,7 +147,7 @@ for i in xrange(1, 7):
 
     # plot difference map
     fig = plt.figure(1)
-    healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='')
+    healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', unit='brightness temperature [K]')
     # healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', min=-0.001, max=0.001)
     # healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', min=-0.0005, max=0.0005)
     # healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', min=-0.0003, max=0.0003)
@@ -175,8 +182,8 @@ for i in xrange(1, 7):
     plt.plot(cl_est, label='Recovered HI')
     plt.plot(cl_simxest, label='cross', color='magenta')
     plt.legend(loc='best')
-    plt.xlabel(r'$l$')
-    plt.ylabel(r'$C_l^{TT}$ [mK${}^2$]')
+    plt.xlabel(r'$l$', fontsize=14)
+    plt.ylabel(r'$C_l^{TT}$ [mK${}^2$]', fontsize=14)
     plt.savefig(out_dir + 'cl_%d.png' % i)
     plt.close()
 
@@ -185,8 +192,8 @@ for i in xrange(1, 7):
     plt.plot(cl_est/cl_sim)
     plt.axhline(y=1.0, linewidth=1.0, color='k', linestyle='--')
     plt.ylim(0, 2)
-    plt.xlabel(r'$l$')
-    plt.ylabel(r'$T_l$')
+    plt.xlabel(r'$l$', fontsize=14)
+    plt.ylabel(r'$T_l$', fontsize=14)
     plt.savefig(out_dir + 'Tl_%d.png' % i)
     plt.close()
 
@@ -204,7 +211,7 @@ for i in xrange(1, 7):
     plt.plot(cl_simxest, label='cross', color='magenta')
     plt.plot(cl_sim - cl_est, label='Residual', color='red')
     plt.legend(loc='best')
-    plt.xlabel(r'$l$')
-    plt.ylabel(r'$l(l+1) C_l^{TT}/2\pi$ [mK${}^2$]')
+    plt.xlabel(r'$l$', fontsize=14)
+    plt.ylabel(r'$l(l+1) C_l^{TT}/2\pi$ [mK${}^2$]', fontsize=14)
     plt.savefig(out_dir + 'cl_normalize_%d.png' % i)
     plt.close()

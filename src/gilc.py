@@ -76,7 +76,8 @@ plt.semilogy(range(len(s1)), s1[::-1])
 plt.semilogy(range(len(s1)), s1[::-1], 'ro', markersize=4.0)
 plt.axhline(y=1.0, linewidth=1.0, color='k', linestyle='--')
 plt.xlim(-1, 256)
-plt.ylabel('Eigen-values')
+plt.xlabel('eigen modes', fontsize=14)
+plt.ylabel('eigenvalues', fontsize=14)
 plt.savefig(out_dir + 'eig_val.png')
 plt.close()
 
@@ -105,9 +106,14 @@ for td in threshold:
     W = np.dot(np.dot(np.dot(S, la.inv(STRiS)), S.T), Ri)
     rec_cm = np.dot(W, tt_map)
 
+    # save reconstructed 21cm data for latter use
+    with h5py.File(out_dir + 'rec_cm_%.2f.hdf5' % td, 'w') as f:
+        f.create_dataset('cm_map', data=cm_map)
+        f.create_dataset('rec_cm', data=rec_cm)
+
     # plot reconstructed 21cm map
     fig = plt.figure(1)
-    healpy.mollview(rec_cm[cind], fig=1, title='')
+    healpy.mollview(rec_cm[cind], fig=1, title='', unit='brightness temperature [K]')
     # healpy.mollview(rec_cm[cind], fig=1, title='', min=-0.001, max=0.001)
     # healpy.mollview(rec_cm[cind], fig=1, title='', min=-0.0003, max=0.0003)
     healpy.graticule(verbose=False)
@@ -116,7 +122,7 @@ for td in threshold:
 
     # plot difference map
     fig = plt.figure(1)
-    healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='')
+    healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', unit='brightness temperature [K]')
     # healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', min=-0.001, max=0.001)
     # healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', min=-0.0003, max=0.0003)
     healpy.graticule(verbose=False)
@@ -151,16 +157,16 @@ for td in threshold:
     if td > 10.0:
         plt.ylim(0, 1.0e-10)
     plt.legend(loc='best')
-    plt.xlabel(r'$l$')
-    plt.ylabel(r'$C_l^{TT}$ [mK${}^2$]')
+    plt.xlabel(r'$l$', fontsize=14)
+    plt.ylabel(r'$C_l^{TT}$ [mK${}^2$]', fontsize=14)
     plt.savefig(out_dir + 'cl_%.2f.png' % td)
     plt.close()
 
     # plot cross cl
     plt.figure()
     plt.plot(cl_simxest)
-    plt.xlabel(r'$l$')
-    plt.ylabel(r'$C_l^{TT, cross}$ [mK${}^2$]')
+    plt.xlabel(r'$l$', fontsize=14)
+    plt.ylabel(r'$C_l^{TT, cross}$ [mK${}^2$]', fontsize=14)
     plt.savefig(out_dir + 'xcl_%.2f.png' % td)
     plt.close()
 
@@ -169,8 +175,8 @@ for td in threshold:
     plt.plot(cl_est/cl_sim)
     plt.axhline(y=1.0, linewidth=1.0, color='k', linestyle='--')
     plt.ylim(0, 2)
-    plt.xlabel(r'$l$')
-    plt.ylabel(r'$T_l$')
+    plt.xlabel(r'$l$', fontsize=14)
+    plt.ylabel(r'$T_l$', fontsize=14)
     plt.savefig(out_dir + 'Tl_%.2f.png' % td)
     plt.close()
 
@@ -188,15 +194,15 @@ for td in threshold:
     plt.plot(cl_simxest, label='cross', color='magenta')
     plt.plot(cl_sim - cl_est, label='Residual', color='red')
     plt.legend(loc='best')
-    plt.xlabel(r'$l$')
-    plt.ylabel(r'$l(l+1) C_l^{TT}/2\pi$ [mK${}^2$]')
+    plt.xlabel(r'$l$', fontsize=14)
+    plt.ylabel(r'$l(l+1) C_l^{TT}/2\pi$ [mK${}^2$]', fontsize=14)
     plt.savefig(out_dir + 'cl_normalize_%.2f.png' % td)
     plt.close()
 
     # plot normalized cross cl
     plt.figure()
     plt.plot(cl_simxest)
-    plt.xlabel(r'$l$')
-    plt.ylabel(r'$l(l+1) C_l^{TT, cross}/2\pi$ [mK${}^2$]')
+    plt.xlabel(r'$l$', fontsize=14)
+    plt.ylabel(r'$l(l+1) C_l^{TT, cross}/2\pi$ [mK${}^2$]', fontsize=14)
     plt.savefig(out_dir + 'xcl_normalize_%.2f.png' % td)
     plt.close()
