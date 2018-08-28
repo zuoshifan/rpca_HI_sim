@@ -43,9 +43,9 @@ Tb = c21.T_b(z)
 print z, Tb
 
 cind = 128
-fig = plt.figure(1)
+fig = plt.figure(1, figsize=(13, 5))
 # healpy.mollview(rec_cm[cind] / cm_map[cind] - 1, fig=1, title='', min=-10, max=10)
-healpy.mollview((rec_cm[cind] - cm_map[cind]) / (Tb + cm_map[cind]), fig=1, title='', min=-2, max=2, unit='brightness temperature [K]')
+healpy.mollview((rec_cm[cind] - cm_map[cind]) / (Tb + cm_map[cind]), fig=1, title='', min=-2, max=2)
 # healpy.mollview((rec_cm[cind] - cm_map[cind]) / (Tb + cm_map[cind]), fig=1, title='', min=-1, max=1)
 # healpy.mollview(2 * (rec_cm[cind] - cm_map[cind]) / (rec_cm[cind] + cm_map[cind]), fig=1, title='', min=-1, max=1)
 healpy.graticule(verbose=False)

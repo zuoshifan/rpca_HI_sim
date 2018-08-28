@@ -119,7 +119,7 @@ for i in xrange(1, 7):
 
     # plot pc_sum
     plt.figure()
-    fig = plt.figure(1)
+    fig = plt.figure(1, figsize=(13, 5))
     healpy.mollview(pc_sum[cind], fig=1, title='', min=0, max=50, unit='brightness temperature [K]')
     healpy.graticule(verbose=False)
     fig.savefig(out_dir + 'pc_sum_%d.png' % i)
@@ -134,7 +134,7 @@ for i in xrange(1, 7):
 
     # plot res
     plt.figure()
-    fig = plt.figure(1)
+    fig = plt.figure(1, figsize=(13, 5))
     healpy.mollview(res[cind], fig=1, title='', unit='brightness temperature [K]')
     # healpy.mollview(res[cind], fig=1, title='', min=-0.001, max=0.001)
     # healpy.mollview(res[cind], fig=1, title='', min=-0.0005, max=0.0005)
@@ -146,7 +146,7 @@ for i in xrange(1, 7):
     rec_cm = res
 
     # plot difference map
-    fig = plt.figure(1)
+    fig = plt.figure(1, figsize=(13, 5))
     healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', unit='brightness temperature [K]')
     # healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', min=-0.001, max=0.001)
     # healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', min=-0.0005, max=0.0005)

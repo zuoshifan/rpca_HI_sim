@@ -112,7 +112,7 @@ for td in threshold:
         f.create_dataset('rec_cm', data=rec_cm)
 
     # plot reconstructed 21cm map
-    fig = plt.figure(1)
+    fig = plt.figure(1, figsize=(13, 5))
     healpy.mollview(rec_cm[cind], fig=1, title='', unit='brightness temperature [K]')
     # healpy.mollview(rec_cm[cind], fig=1, title='', min=-0.001, max=0.001)
     # healpy.mollview(rec_cm[cind], fig=1, title='', min=-0.0003, max=0.0003)
@@ -121,7 +121,7 @@ for td in threshold:
     plt.close()
 
     # plot difference map
-    fig = plt.figure(1)
+    fig = plt.figure(1, figsize=(13, 5))
     healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', unit='brightness temperature [K]')
     # healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', min=-0.001, max=0.001)
     # healpy.mollview(cm_map[cind] - rec_cm[cind], fig=1, title='', min=-0.0003, max=0.0003)
