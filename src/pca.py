@@ -197,6 +197,16 @@ for i in xrange(1, 7):
     plt.savefig(out_dir + 'Tl_%d.png' % i)
     plt.close()
 
+    # plot cross transfer function xcl_out / cl_in
+    plt.figure()
+    plt.plot(cl_simxest/cl_sim)
+    plt.axhline(y=1.0, linewidth=1.0, color='k', linestyle='--')
+    plt.ylim(0, 2)
+    plt.xlabel(r'$l$', fontsize=14)
+    plt.ylabel(r'$T_l$', fontsize=14)
+    plt.savefig(out_dir + 'xTl_%.2f.png' % td)
+    plt.close()
+
     # normalize cl to l(l+1)Cl/2pi
     l = np.arange(len(cl_sim))
     factor = l*(l + 1) / (2*np.pi)
